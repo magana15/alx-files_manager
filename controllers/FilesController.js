@@ -3,7 +3,7 @@ import fs from 'fs';
 import path from 'path';
 import mime from 'mime-types';
 import Queue from 'bull';
-import { promisify } from 'util';
+//this line
 import dbClient from '../utils/db';
 import redisClient from '../utils/redis';
 
@@ -64,13 +64,13 @@ class FilesController {
         parentId,
       });
     }
-    if (file.type === 'image') {
-      await fileQueue.add({ userId: file.userId, fileId: file._id });
+	  const folderPath = process.env.FOLDER_PATH || '/tmp/files_manager';
+   if (fileDocument.type === 'image') {
+      await fileQueue.add({ userId: fileDocument.userId, fileId: fileDocument._id });
     }
 
-    return res.status(201).json(file);
+    return res.status(201).json(fileDocument);
 
-    const folderPath = process.env.FOLDER_PATH || '/tmp/files_manager';
     if (!fs.existsSync(folderPath)) {
       fs.mkdirSync(folderPath, { recursive: true });
     }
